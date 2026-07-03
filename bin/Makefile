@@ -1852,6 +1852,25 @@ $(TOP).rc: compile.rc
 rc-clean:
 	-rm -rf rtlc rc.log rc.cmd
 
+#########   NVC targets   ############
+
+NVC ?= nvc
+NVCRUNOPT ?= -H1g
+NVCAOPT ?= --relaxed
+NVCOPT ?= --std=93
+NVCVOPT ?=
+
+.PHONY: nvc
+nvc: compile.nvc make.nvc
+	make -f make.nvc nvc-import
+	$(NVC) $(NVCOPT) --work=work:nvc/work -L nvc -e --jit $(SIMTOP)
+
+.PHONY: nvc-run
+nvc-run:
+	$(NVC) $(NVCOPT) $(NVCRUNOPT) --work=work:nvc/work -L nvc -r $(SIMTOP)
+
+nvc-clean:
+	-rm -rf nvc
 
 #########    NanoXplore  targets   ############
 
@@ -1985,7 +2004,7 @@ scriptgendone: scriptgen_variable_values.tcl
 work-clean: $(CLEAN) vsim-clean ise-clean ncsim-clean ghdl-clean synplify-clean quartus-clean \
 	actel-clean dc-clean rc-clean isp-clean precision-clean vsimsa-clean avhdl-clean \
 	vivado-clean planahead-clean riviera-clean fpro-clean vcs-clean nanoxmap-clean \
-	radiant-clean
+	radiant-clean nvc-clean
 	-rm -rf verilog.txt tkparse.exe main.tk ahbrom outdata ahbrom.bin
 
 scripts-clean:
