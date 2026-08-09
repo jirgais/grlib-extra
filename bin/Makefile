@@ -922,6 +922,7 @@ UNISIMSECIPFILES = MCB.vhd GTXE1.vhd \
 	PCIE_2_0.vhd PCIE_A1.vhd
 UNISIMSECIPFILESSKIP = $(UNISIMSECIPFILES:%=|%)
 
+UNISIMFILES = unisim_VPKG.vhd unisim_VCOMP.vhd unisim_VITAL.vhd \
 # Workaround for secureip files being part of unisim and secureip techlib
 # being unavailable
 ifneq (,$(findstring unisim,$(TECHLIBS)))
@@ -970,6 +971,43 @@ else
 		  cat $(UNISIM)/primitive/$$j >> $(GRUNISIM)/unisim_VITAL.vhd; \
 		done ; \
 	      fi ; \
+	    fi ; \
+	  fi ; \
+	done
+endif
+
+UNISIMV = $(XILINX_VIVADO)/data/vhdl/src/unisims
+UNISIMVFILES = unisim_VPKG.vhd unisim_retarget_VCOMP.vhd unisim_VITAL.vhd
+GRUNISIMV = $(GRLIB)/lib/tech/unisim/vivado
+UBERFILESV = sim_vivado.vhd
+install-unisim-vivado:
+ifeq ("$(GRLIB_SIMULATOR)","Xilinx")
+	@echo "GRLIB_SIMULATOR is Xilinx. Unisim installation not required, aborted."
+else
+	@echo UNISIM source path: $(UNISIMV); \
+	for i in $(UNISIMVFILES); do \
+	  if test -r $(UNISIMV)/$$i; then \
+	    cat  $(UNISIMV)/$$i > $(GRUNISIMV)/$$i;\
+	    echo  installing $$i ;\
+	  else \
+	    if [ "unisim_VITAL.vhd" = $$i ]; then \
+	      if test -r $(UNISIMV)/primitive/vhdl_analyze_order; then \
+		echo "creating unisim_VITAL.vhd from primitives" ; \
+		echo "" >  $(GRUNISIMV)/unisim_VITAL.vhd; \
+		for j in `cat $(UNISIMV)/primitive/vhdl_analyze_order`; do \
+		  cat $(UNISIMV)/primitive/$$j >> $(GRUNISIMV)/unisim_VITAL.vhd; \
+		done ; \
+	      fi ; \
+	      if test -r $(UNISIMV)/retarget/vhdl_analyze_order; then \
+		for j in `cat $(UNISIMV)/retarget/vhdl_analyze_order`; do \
+		  cat $(UNISIMV)/retarget/$$j >> $(GRUNISIMV)/unisim_VITAL.vhd; \
+		done ; \
+	      fi ; \
+	for i in $(UBERFILESV); do \
+	  if test -r $(GRLIB)/lib/contrib/uberddr3/$$i; then \
+	    cat $(GRLIB)/lib/contrib/uberddr3/$$i >> $(GRUNISIMV)/unisim_VITAL.vhd; \
+	  fi ; \
+	done ; \
 	    fi ; \
 	  fi ; \
 	done
@@ -1096,6 +1134,7 @@ remove-secureip uninstall-secureip remove-unisim uninstall-unisim:
 	@-rm $(GRLIB)/lib/tech/secureip/ise/*.vp $(GRLIB)/lib/tech/secureip_ver/ise/*.vp
 	@-rm -r $(GRLIB)/lib/tech/unisims_ver/ise $(GRLIB)/lib/tech/xilinxcorelib_ver/ise
 	@-rm $(GRLIB)/lib/tech/unisim/ise/*.vhd
+	@-rm $(GRLIB)/lib/tech/unisim/vivado/*.vhd
 
 # Simulator compxlib
 ifeq ("$(GRLIB_XIL_compxlib_Simulator)","")
