@@ -1,0 +1,8 @@
+uart.vhd
+libdcom.vhd
+apbuart.vhd
+apbuart_16550.vhd
+dcom.vhd
+dcom_uart.vhd
+ahbuart.vhd
+apbuart_dual.vhd
