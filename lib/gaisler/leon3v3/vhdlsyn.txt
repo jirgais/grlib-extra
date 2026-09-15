@@ -18,6 +18,7 @@ cachemem.vhd
 mmu_cache.vhd
 grfpwx.vhd
 grlfpwx.vhd
+irisfpc.vhd
 iu3.vhd
 proc3.vhd
 grfpwxsh.vhd

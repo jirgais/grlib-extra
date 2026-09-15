@@ -266,13 +266,20 @@ begin
                      );
        end generate;  
 
-       grlfpc1gen : if (fpuarch >=8) and (fpuarch < 15) generate
+       grlfpc1gen : if (fpuarch >=8) and (fpuarch < 12) generate
          fpu0 : grlfpwx
            generic map (MEMTECH_MOD*(1-FPRF_INFER), pclow, dsu, disas,
                         (fpuarch-8), fpunet, hindex, scantest)
            port map (rst, gfclk2, holdn, fpi, fpo, ahbi.testin
                      );
        end generate;    
+
+       irisfpcgen : if (fpuarch >= 12) and (fpuarch < 15) generate
+         irisfpc0 : irisfpc
+           generic map (MEMTECH_MOD*(1-FPRF_INFER), pclow, dsu, disas,
+                        fpuarch-12, fpunet, hindex, scantest)
+           port map (rst, gfclk2, holdn, fpi, fpo, ahbi.testin);
+       end generate;
        fpui <= grfpu_in_none;
      end generate;    
   

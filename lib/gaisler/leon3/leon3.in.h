@@ -94,6 +94,8 @@
 #define CONFIG_FPU (1+CONFIG_FPU_GRFPU_MUL + 3)
 #elif defined CONFIG_FPU_GRFPULITE
 #define CONFIG_FPU (8+CONFIG_FPU_GRFPC)
+#elif defined CONFIG_FPU_IRIS
+#define CONFIG_FPU 12
 #else
 #define CONFIG_FPU 0
 #endif

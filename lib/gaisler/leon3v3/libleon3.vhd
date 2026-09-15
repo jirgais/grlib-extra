@@ -170,6 +170,26 @@ package libleon3 is
       );
   end component;
 
+  component irisfpc
+    generic (
+      tech    :     integer              := 0;
+      pclow   :     integer range 0 to 2 := 2;
+      dsu     :     integer range 0 to 1 := 0;
+      disas   :     integer range 0 to 2 := 0;
+      pipe    :     integer              := 0;
+      netlist :     integer              := 0;
+      index   :     integer              := 0;
+      scantest:     integer              := 0
+      );
+    port (
+      rst   : in  std_ulogic;           -- Reset
+      clk   : in  std_ulogic;
+      holdn : in  std_ulogic;           -- pipeline hold
+      cpi   : in  fpc_in_type;
+      cpo   : out fpc_out_type;
+      testin: in  std_logic_vector(TESTIN_WIDTH-1 downto 0)
+      );
+  end component;
 
   component regfile_3p_l3
     generic (

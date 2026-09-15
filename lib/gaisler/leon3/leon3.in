@@ -176,7 +176,8 @@ if [ "$CONFIG_LEON3" = "y" ]; then
       if [ "$CONFIG_FPU_ENABLE" = "y" ]; then
         choice 'FPU core' \
 	  "GRFPU		CONFIG_FPU_GRFPU \
-	   GRFPU-LITE	CONFIG_FPU_GRFPULITE" GRFPU
+	   GRFPU-LITE	CONFIG_FPU_GRFPULITE \
+	   IRIS-FPU	CONFIG_FPU_IRIS" GRFPU
         if [ "$CONFIG_FPU_GRFPU" = "y" ]; then
   	  choice 'GRFPU multiplier' \
    	   "Inferred              CONFIG_FPU_GRFPU_INFMUL \

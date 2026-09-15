@@ -131,14 +131,15 @@ CONFIG_IU_WATCHPOINTS
 
 Floating-point enable
 CONFIG_FPU_ENABLE
-  Say Y here to enable the floating-point interface for the GRFPU-lite
-  or GRFPU. Note that no FPUs are provided with the GPL version
-  of GRLIB. Both FPUs are commercial cores and must be obtained separately.
+  Say Y here to enable the floating-point interface for the GRFPU-lite,
+  GRFPU, or IRIS FPU. GRFPU FPUs are commercial cores and must be
+  obtained separately. IRIS FPU is open-source.
 
 FPU selection
 CONFIG_FPU_GRFPU
-  Select between Gaisler Research's GRFPU and GRFPU-lite FPUs. All cores
-  are fully IEEE-754 compatible and support all SPARC FPU instructions.
+  Select between Gaisler Research's GRFPU and GRFPU-lite FPUs, or the
+  open-source IRIS FPU. All cores are fully IEEE-754 compatible and
+  support all SPARC FPU instructions.
 
 GRFPU Multiplier
 CONFIG_FPU_GRFPU_INFMUL
