@@ -6,6 +6,7 @@ spfi
 wizl
 eth
 opencores
+contrib
 ihp
 actel/core1553bbc
 actel/core1553brt
