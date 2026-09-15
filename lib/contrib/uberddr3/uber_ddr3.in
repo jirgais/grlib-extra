@@ -1,0 +1,4 @@
+mainmenu_option next_comment
+    comment 'Uber DDR3 controller for Xilinx  '
+	bool 'Enable Uber DDR3 controller             ' CONFIG_UBER_DDR3 n
+endmenu

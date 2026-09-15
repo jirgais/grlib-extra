@@ -1,0 +1,4 @@
+Enable Uber DDR3 controller
+CONFIG_UBER_DDR3
+  Enable the open-source Uber DDR3 controller. It usually provides
+  a faster and smaller memory interface than the Xilinx MIG.

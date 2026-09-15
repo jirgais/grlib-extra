@@ -19,3 +19,4 @@ memory_unisim_ecc.vhd
 memory_ultrascale_ecc.vhd
 memory_versal.vhd
 memory_versal_ecc.vhd
+uber_ddr3_phy_unisim.vhd
