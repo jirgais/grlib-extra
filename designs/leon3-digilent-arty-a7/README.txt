@@ -18,12 +18,18 @@ to the prohibitive Xilinx license, so the MIG must be re-generated
 with coregen before simulation and synthesis. Xilinx MIG interface
 will automatically be generated when Vivado is launched.
 
+Alternatively, the open-source UberDDR3 controller can be used instead
+of the Xilinx MIG. Use xconfig to disable the MIG and enable Uber.
+The Uber DDR3 controller is smaller and faster than the MIG, and has
+also higher throughput. Synthesis has been verified with Vivado 2025.2.1
+and 2026.1.
+
 A setup slack timing summary can be generated with 'make vivslack'
 which outputs to the files vivslack.rpt, vivsetup.rpt and vivhold.rpt.
 
 
-Simulation
-----------
+Simulation when using Xilinx MIG
+--------------------------------
 
 To simulate using GHDL:
   make ghdl
@@ -51,6 +57,23 @@ To simulate using Aldec Riviera use the following make targets:
   make mig_series7 (only required if Xilinx MIG is enabled via xconfig)
   make soft
   make riviera-launch
+
+Simulation when using Uber DDR3
+-------------------------------
+
+The design can be simulated with Vivado Xsim by launching Vivado:
+
+    make vivado-launch
+
+Some versions of Questasim and Modelsim can also be used if the
+Vivado unisim libraries are first installed with:
+
+    make install-unisim-vivado
+    make distclean
+    make vsim
+
+Some versions of Modelsim might require -novopt switch during simulation.
+GHDL and NVC are currently not able to simulate the Uber DDR3 controller.
 
 
 Design overview

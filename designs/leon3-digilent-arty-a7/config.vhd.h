@@ -111,17 +111,31 @@
   constant CFG_MIG_7SERIES    : integer := CONFIG_MIG_7SERIES;
   constant CFG_MIG_7SERIES_MODEL    : integer := CONFIG_MIG_7SERIES_MODEL;
 
--- SPI memory controller
-  constant CFG_SPIMCTRL            : integer := CONFIG_SPIMCTRL;
-  constant CFG_SPIMCTRL_SDCARD     : integer := 0;
-  constant CFG_SPIMCTRL_READCMD    : integer := 16#CONFIG_SPIMCTRL_READCMD#;
-  constant CFG_SPIMCTRL_DUMMYBYTE  : integer := CONFIG_SPIMCTRL_DUMMYBYTE;
-  constant CFG_SPIMCTRL_DUALOUTPUT : integer := CONFIG_SPIMCTRL_DUALOUTPUT;
-  constant CFG_SPIMCTRL_SCALER     : integer := CONFIG_SPIMCTRL_SCALER;
-  constant CFG_SPIMCTRL_ASCALER    : integer := CONFIG_SPIMCTRL_ASCALER;
-  constant CFG_SPIMCTRL_PWRUPCNT   : integer := CONFIG_SPIMCTRL_PWRUPCNT;
-  constant CFG_SPIMCTRL_OFFSET     : integer := 16#CONFIG_SPIMCTRL_OFFSET#;
+-- Uber DDR3 controller
+  constant CFG_UBER_DDR3    : integer := CONFIG_UBER_DDR3;
 
+-- SPI memory controller
+  constant CFG_SPIMCTRL             : integer := CONFIG_SPIMCTRL;
+  constant CFG_SPIMCTRL_SDCARD      : integer := 0;
+  constant CFG_SPIMCTRL_READCMD     : integer := 16#CONFIG_SPIMCTRL_READCMD#;
+  constant CFG_SPIMCTRL_DUMMYBYTE   : integer := CONFIG_SPIMCTRL_DUMMYBYTE;
+  constant CFG_SPIMCTRL_DUALOUTPUT  : integer := CONFIG_SPIMCTRL_DUALOUTPUT;
+  constant CFG_SPIMCTRL_QUADOUTPUT  : integer := CONFIG_SPIMCTRL_QUADOUTPUT;
+  constant CFG_SPIMCTRL_DUALINPUT   : integer := CONFIG_SPIMCTRL_DUALINPUT;
+  constant CFG_SPIMCTRL_QUADINPUT   : integer := CONFIG_SPIMCTRL_QUADINPUT;
+  constant CFG_SPIMCTRL_DSPI        : integer := CONFIG_SPIMCTRL_DSPI;
+  constant CFG_SPIMCTRL_QSPI        : integer := CONFIG_SPIMCTRL_QSPI;
+  constant CFG_SPIMCTRL_DUMMYCYCLES : integer := CONFIG_SPIMCTRL_DUMMYCYCLES;
+  constant CFG_SPIMCTRL_EXTADDR     : integer := CONFIG_SPIMCTRL_EXTADDR;
+  constant CFG_SPIMCTRL_RECONF      : integer := CONFIG_SPIMCTRL_RECONF;
+  constant CFG_SPIMCTRL_SCALER      : integer := CONFIG_SPIMCTRL_SCALER;
+  constant CFG_SPIMCTRL_ASCALER     : integer := CONFIG_SPIMCTRL_ASCALER;
+  constant CFG_SPIMCTRL_PWRUPCNT    : integer := CONFIG_SPIMCTRL_PWRUPCNT;
+  constant CFG_SPIMCTRL_OFFSET      : integer := 16#CONFIG_SPIMCTRL_OFFSET#;
+  constant CFG_SPIMCTRL_WRITECMD    : integer := 16#CONFIG_SPIMCTRL_WRITECMD#;
+  constant CFG_SPIMCTRL_ALLOWWRT    : integer := CONFIG_SPIMCTRL_WRITES;
+  constant CFG_SPIMCTRL_XIPBYTE     : integer := CONFIG_SPIMCTRL_XIPBYTE;
+  constant CFG_SPIMCTRL_XIPPOL      : integer := CONFIG_SPIMCTRL_XIPPOL;
 -- AHB ROM
   constant CFG_AHBROMEN	: integer := CONFIG_AHBROM_ENABLE;
   constant CFG_AHBROPIP	: integer := CONFIG_AHBROM_PIPE;
@@ -147,6 +161,7 @@
   constant CFG_GRETH_FT     : integer := CONFIG_GRETH_FT;
   constant CFG_GRETH_EDCLFT : integer := CONFIG_GRETH_EDCLFT;
 #endif
+  constant CFG_ETH_PHY_ADDR : integer := CONFIG_GRETH_PHY_ADDR;
 -- UART 1
   constant CFG_UART1_ENABLE : integer := CONFIG_UART1_ENABLE;
   constant CFG_UART1_FIFO   : integer := CFG_UA1_FIFO;

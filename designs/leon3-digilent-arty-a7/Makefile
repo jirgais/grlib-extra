@@ -26,7 +26,7 @@ VHDLSYNFILES  =
 VHDLSYNFILES += $(BOARDDIR)/ahb2mig_arty_a7.vhdl
 VHDLSYNFILES += $(BOARDDIR)/clockers_mig.vhdl
 VHDLSYNFILES += $(BOARDDIR)/clockers_clkgen.vhdl
-VHDLSYNFILES += config.vhd ahbrom.vhd leon3mp.vhd
+VHDLSYNFILES += config.vhd ahbrom.vhd uber_clk.vhd leon3mp.vhd
 VHDLSIMFILES=testbench.vhd
 
 SIMTOP=testbench
@@ -37,7 +37,7 @@ CLEAN=soft-clean
 
 TECHLIBS = unisim
 # SKIP_SIM_TECHLIBS = 1
-
+DIRADD = uberddr3 vivado
 LIBSKIP = core1553bbc core1553brm core1553brt gr1553 corePCIF \
 	tmtc openchip ihp usbhc spw
 LIBSKIP += esa
@@ -51,13 +51,17 @@ DIRSKIP = b1553 pci/pcif leon2 leon2ft crypto satcan pci leon3ft ambatest can \
 	usb grusbhc spacewire ascs slink hcan \
 	leon4v0 l2cache pwm gr1553b iommu
 DIRSKIP += grdmac
+DIRSKIP += ise
 FILESKIP  =
 FILESKIP += grcan.vhd
 FILESKIP += adapters/sgmii.vhd
 FILESKIP += adapters/rgmii_series7.vhd
 
 # Options used during compilation
-VCOMOPT=-explicit -O0
+VCOMOPT=-explicit +acc -O1
+VLOGOPT=+acc
+NVCVOPT=--relative=.
+NVCRUNOPT += --ieee-warnings=off -H 1g
 
 # GRETH options
 ifeq ($(CONFIG_GRETH_ENABLE),y)

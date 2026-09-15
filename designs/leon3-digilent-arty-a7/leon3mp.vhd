@@ -48,6 +48,9 @@ use gaisler.sim.all;
 
 use work.config.all;
 
+library contrib;
+use contrib.uber_ddr3_comp.all;
+
 entity leon3mp is
   generic (
     fabtech                 : integer := CFG_FABTECH;
@@ -59,7 +62,10 @@ entity leon3mp is
     pclow                   : integer := CFG_PCLOW;
     SIM_BYPASS_INIT_CAL     : string := "OFF";
     SIMULATION              : string := "FALSE";
-    USE_MIG_INTERFACE_MODEL : boolean := false
+    USE_MIG_INTERFACE_MODEL : boolean := false;
+    MICRON_SIM              : integer := 0;
+    memlitend               : integer := 0;
+    pllmul                  : integer := 10   -- 10 = 333MHz, 12 = 400MHz ddr
     );
   port (
     CLK100MHZ          : in    std_ulogic;
@@ -191,6 +197,10 @@ architecture rtl of leon3mp is
 
   signal swint  : std_logic_vector(sw'range);
   signal rgbled : std_logic_vector(4*3-1 downto 0);
+  signal clk333, clk200, clk333_90 : std_logic;
+  signal uber_rst : std_logic;
+
+  signal logsig: std_logic_vector(31 downto 0);
 
   attribute keep                     : boolean;
   attribute syn_keep                 : boolean;
@@ -405,9 +415,71 @@ begin
     clkm <= not clkm after 10.0 ns;
     -- pragma translate_on
   
-  end generate gen_mig_model;    end generate;
-  
-  nomig : if (CFG_MIG_7SERIES = 0) generate
+    end generate gen_mig_model;
+  end generate;
+
+  uber0 : if (CFG_MIG_7SERIES = 0) and (CFG_UBER_DDR3 = 1) generate
+
+    clk0 : entity work.uber_clk
+    generic map (clkmul => pllmul)
+    port map (
+      rstn => rstnraw,
+      clkin   => CLK100MHz,
+      clk83   => clkm,
+      clk333  => clk333,
+      clk200  => clk200,
+      clk333_90  => clk333_90,
+      clk25     => eth_ref_clki,
+      locked => pll_locked
+    );
+
+    uber_rst <= rstnraw and pll_locked;
+
+    ddrc : ahb2uber
+      generic map (hindex => 5, haddr => 16#400#, hmask => 16#F00#,
+          pindex => 5, paddr => 5, litend => memlitend,
+        CONTROLLER_CLK_PERIOD => 120000/pllmul, -- ps, clock period of the controller interface
+        DDR3_CLK_PERIOD => 30000/pllmul, -- ps, clock period of the DDR3 RAM device (must be 1/4 of the CONTROLLER_CLK_PERIOD)
+        ROW_BITS => 14, -- width of row address
+        COL_BITS => 10, -- width of column address
+        BA_BITS => 3, -- width of bank address
+        BYTE_LANES => 2, -- number of DDR3 modules to be controlled
+        MICRON_SIM => MICRON_SIM, -- enable faster simulation for micron ddr3 model (shorten POWER_ON_RESET_HIGH and INITIAL_CKE_LOW)
+        ODELAY_SUPPORTED => 0, -- set to 1 when ODELAYE2 is supported
+        SPEED_BIN => 1 --  0 = Use top-level parameters , 1 = DDR3-1066 (7-7-7) , 2 = DR3-1333 (9-9-9) , 3 = DDR3-1600 (11-11-11)
+        )
+      port map (
+        clk_amba    => clkm,
+        rst_n_syn   => rstn,
+        ahbsi       => ahbsi,
+        ahbso       => ahbso(5),
+        apbi        => apbi,
+        apbo        => apbo(5),
+        ddr3_rst => uber_rst,
+        ddr3_clk => clk333,
+        ref_clk => clk200,
+        ddr3_clk_90 => clk333_90,
+        ddr3_ck_p => ddr3_ck_p,
+        ddr3_ck_n => ddr3_ck_n,
+        ddr3_reset_n => ddr3_reset_n,
+        ddr3_cke => ddr3_cke,
+        ddr3_cs_n => ddr3_cs_n,
+        ddr3_ras_n => ddr3_ras_n,
+        ddr3_cas_n => ddr3_cas_n,
+        ddr3_we_n => ddr3_we_n,
+        ddr3_addr => ddr3_addr,
+        ddr3_ba => ddr3_ba,
+        ddr3_dq => ddr3_dq,
+        ddr3_dqs_p => ddr3_dqs_p,
+        ddr3_dqs_n => ddr3_dqs_n,
+        ddr3_dm => ddr3_dm,
+        ddr3_odt => ddr3_odt,
+        calib_done => calib_done
+    );
+
+  end generate;
+
+  nomig : if (CFG_MIG_7SERIES = 0) and (CFG_UBER_DDR3 = 0) generate
     -- Generate clkm and eth_ref_clk
     clockers0 : entity work.clockers_clkgen
     generic map (

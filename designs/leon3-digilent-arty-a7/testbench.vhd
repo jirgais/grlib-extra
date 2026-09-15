@@ -42,8 +42,9 @@ entity testbench is
     dbguart   : integer := CFG_DUART;   -- Print UART on console
     pclow     : integer := CFG_PCLOW;
     USE_MIG_INTERFACE_MODEL : boolean := false;
-    clkperiod : integer := 10           -- system clock period
-    );
+    clkperiod : integer := 10;           -- system clock period
+    pllmul    : integer := 10  -- clock period for uber ddr
+    );                          -- 10 = 333 MHz, 12 = 400 MHz
 end;
 
 architecture behav of testbench is
@@ -63,6 +64,9 @@ architecture behav of testbench is
   constant SIMULATION          : string := "TRUE";
           -- Should be TRUE during design simulations and
           -- FALSE during implementations
+
+  -- Fast start-up of DDR3 controller
+  constant MICRON_SIM : integer := 1;
 
   signal CLK100MHZ          : std_ulogic := '0';
   -- LEDs
@@ -85,7 +89,7 @@ architecture behav of testbench is
   signal ddr3_dq            : std_logic_vector(15 downto 0);
   signal ddr3_dqs_p         : std_logic_vector(1 downto 0);
   signal ddr3_dqs_n         : std_logic_vector(1 downto 0);
-  signal ddr3_addr          : std_logic_vector(14 downto 0);
+  signal ddr3_addr          : std_logic_vector(13 downto 0);
   signal ddr3_ba            : std_logic_vector(2 downto 0);
   signal ddr3_ras_n         : std_logic;
   signal ddr3_cas_n         : std_logic;
@@ -94,6 +98,7 @@ architecture behav of testbench is
   signal ddr3_ck_p          : std_logic_vector(0 downto 0);
   signal ddr3_ck_n          : std_logic_vector(0 downto 0);
   signal ddr3_cke           : std_logic_vector(0 downto 0);
+  signal ddr3_cs_n          : std_logic_vector(0 downto 0);
   signal ddr3_dm            : std_logic_vector(1 downto 0);
   signal ddr3_odt           : std_logic_vector(0 downto 0);
   -- Fan PWM
@@ -138,7 +143,8 @@ begin
 
   d3 : entity work.leon3mp
     generic map (fabtech, memtech, padtech, clktech, disas, dbguart, pclow,
-                 SIM_BYPASS_INIT_CAL, SIMULATION, USE_MIG_INTERFACE_MODEL)
+      SIM_BYPASS_INIT_CAL, SIMULATION, USE_MIG_INTERFACE_MODEL, MICRON_SIM,
+      0, pllmul)
     port map (
       CLK100MHZ => CLK100MHZ, led => led,
       ck_rst => ck_rst,
@@ -167,8 +173,48 @@ begin
       eth_rxerr       => erx_er,
       eth_tx_clk      => etx_clk,
       eth_tx_en       => etx_en,
-      eth_txd         => etxdt
+      eth_txd         => etxdt,
+      ddr3_dq    =>  ddr3_dq,
+      ddr3_dqs_p => ddr3_dqs_p,
+      ddr3_dqs_n => ddr3_dqs_n,
+      ddr3_addr  => ddr3_addr,
+      ddr3_ba    => ddr3_ba,
+      ddr3_ras_n => ddr3_ras_n,
+      ddr3_cas_n => ddr3_cas_n,
+      ddr3_we_n  => ddr3_we_n,
+      ddr3_reset_n => ddr3_reset_n,
+      ddr3_ck_p  =>  ddr3_ck_p,
+      ddr3_ck_n  =>  ddr3_ck_n,
+      ddr3_cke   =>  ddr3_cke,
+      ddr3_cs_n  =>  ddr3_cs_n,
+      ddr3_dm   =>  ddr3_dm,
+      ddr3_odt  =>  ddr3_odt
      );
+
+    ddr3mem0 : ddr3ram
+      generic map( width => 16, abits => 14, colbits => 10, rowbits => 14,
+        implbanks => 8, fname => sdramfile, speedbin=>1, density => 4,
+        changeendian=> 8, ldguard => 1, pagesize => 2)
+--      lddelay => (0 ns))
+--      swap => CFG_MIG_7SERIES)
+      port map (
+      ck => ddr3_ck_p(0),
+      ckn => ddr3_ck_n(0),
+      cke => ddr3_cke(0),
+      csn => ddr3_cs_n(0),
+      odt => ddr3_odt(0),
+      rasn => ddr3_ras_n,
+      casn => ddr3_cas_n,
+      wen => ddr3_we_n,
+      dm => ddr3_dm,
+      ba => ddr3_ba,
+      a => ddr3_addr,
+      resetn => ddr3_reset_n,
+      dq => ddr3_dq(15 downto 0),
+      dqs => ddr3_dqs_p,
+      dqsn => ddr3_dqs_n,
+      doload => led(1));
+
 
   spif : if CFG_SPIMCTRL /= 0 generate
     spi0: spi_flash

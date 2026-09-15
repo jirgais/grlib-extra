@@ -108,18 +108,32 @@ package config is
   constant CFG_ETH_ENM : integer := 16#020000#;
   constant CFG_ETH_ENL : integer := 16#000000#;
 -- Xilinx MIG 7-Series
-  constant CFG_MIG_7SERIES : integer := 1;
+  constant CFG_MIG_7SERIES : integer := 0;
   constant CFG_MIG_7SERIES_MODEL : integer := 1;
+-- Uber DDR3 controller
+  constant CFG_UBER_DDR3 : integer := 1;
 -- SPI memory controller
   constant CFG_SPIMCTRL : integer := 1;
   constant CFG_SPIMCTRL_SDCARD : integer := 0;
   constant CFG_SPIMCTRL_READCMD : integer := 16#0B#;
   constant CFG_SPIMCTRL_DUMMYBYTE : integer := 1;
   constant CFG_SPIMCTRL_DUALOUTPUT : integer := 0;
+  constant CFG_SPIMCTRL_QUADOUTPUT : integer := 0;
+  constant CFG_SPIMCTRL_DUALINPUT : integer := 0;
+  constant CFG_SPIMCTRL_QUADINPUT : integer := 0;
+  constant CFG_SPIMCTRL_DSPI : integer := 0;
+  constant CFG_SPIMCTRL_QSPI : integer := 0;
+  constant CFG_SPIMCTRL_DUMMYCYCLES : integer := (0);
+  constant CFG_SPIMCTRL_EXTADDR : integer := 0;
+  constant CFG_SPIMCTRL_RECONF : integer := 0;
   constant CFG_SPIMCTRL_SCALER : integer := (3);
   constant CFG_SPIMCTRL_ASCALER : integer := (1);
   constant CFG_SPIMCTRL_PWRUPCNT : integer := 0;
   constant CFG_SPIMCTRL_OFFSET : integer := 16#400000#;
+  constant CFG_SPIMCTRL_WRITECMD : integer := 16#02#;
+  constant CFG_SPIMCTRL_ALLOWWRT : integer := 0;
+  constant CFG_SPIMCTRL_XIPBYTE : integer := 0;
+  constant CFG_SPIMCTRL_XIPPOL : integer := (1);
 -- AHB ROM
   constant CFG_AHBROMEN : integer := 1;
   constant CFG_AHBROPIP : integer := 0;
@@ -136,6 +150,7 @@ package config is
   constant CFG_GRETH1G : integer := 0;
   constant CFG_ETH_FIFO : integer := 8;
   constant CFG_GRETH_FMC : integer := 0;
+  constant CFG_ETH_PHY_ADDR : integer := (1);
 -- UART 1
   constant CFG_UART1_ENABLE : integer := 1;
   constant CFG_UART1_FIFO : integer := 32;

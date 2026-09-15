@@ -31,6 +31,7 @@ comment 'Peripherals             '
   mainmenu_option next_comment
   comment 'Memory controllers             '
     source lib/gaisler/ddr/mig_7series.in
+    source lib/contrib/uberddr3/uber_ddr3.in
     source lib/gaisler/spi/spimctrl.in
   endmenu
 
